@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SecureApp Pro V5 — Admin</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#ff1a1a;--red2:#ff4444;--green:#00e676;--gold:#ffd600;--text:#f2f2f2;--muted:#8a8a8a;--bg:#050507;--line:rgba(255,26,26,.35)}
+body{font-family:'Nunito',sans-serif;background:#050507;color:var(--text);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 15% 10%,rgba(255,26,26,.16),transparent 35%),radial-gradient(circle at 80% 85%,rgba(255,68,68,.08),transparent 35%);pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:24px 18px 60px}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:var(--red2);letter-spacing:.08em}
+.hero p{font-size:.82rem;color:var(--muted);margin-top:6px}
+.card{background:rgba(255,26,26,.03);border:1.5px solid var(--line);border-radius:22px;padding:20px;backdrop-filter:blur(16px);box-shadow:0 0 26px rgba(255,26,26,.12),inset 0 0 12px rgba(255,26,26,.02)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:920px){.grid{grid-template-columns:1fr}}
+.title{display:flex;align-items:center;gap:10px;font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-family:'Orbitron',sans-serif;margin-bottom:16px}
+.title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.field{display:grid;gap:6px;margin-bottom:12px}
+.label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.input,.select,.textarea{width:100%;padding:12px 14px;background:rgba(0,0,0,.45);border:1px solid rgba(255,26,26,.22);border-radius:12px;color:var(--text);font-size:.9rem;outline:none}
+.textarea{min-height:100px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.row{grid-template-columns:1fr}}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:12px 18px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,26,26,.08);color:var(--red2);font-weight:800;font-size:.8rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .22s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 18px rgba(255,26,26,.22)}
+.btn.primary{background:linear-gradient(135deg,rgba(255,26,26,.18),rgba(255,68,68,.08));color:#fff}
+.btn.green{border-color:rgba(0,230,118,.35);color:var(--green);background:rgba(0,230,118,.05)}
+.status{margin-top:12px;min-height:22px;font-size:.8rem;font-weight:700}.status.ok{color:var(--green)}.status.err{color:#ff9898}.status.warn{color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{padding:16px;border-radius:18px;background:rgba(255,26,26,.03);border:1px solid rgba(255,26,26,.16)}
+.stat .k{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.stat .v{margin-top:6px;font-family:'Orbitron',sans-serif;font-size:1.05rem;color:var(--red2)}
+.table-wrap{overflow:auto;border:1px solid rgba(255,26,26,.16);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th,td{padding:12px 10px;border-bottom:1px solid rgba(255,26,26,.08);text-align:left;vertical-align:top}
+th{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+.mono{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:.04em}
+.small{font-size:.74rem;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,26,26,.16);font-size:.72rem;font-weight:800}
+.badge.on{color:var(--green);border-color:rgba(0,230,118,.25)}
+.badge.off{color:#ff9898;border-color:rgba(255,26,26,.25)}
+.login-wrap{max-width:460px;margin:60px auto 0}
+.hidden{display:none !important}
+.notice{font-size:.75rem;color:#777;margin-top:8px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="adminLogin" class="login-wrap card">
+    <div class="title"><i class="fa-solid fa-user-shield"></i> Đăng nhập quản trị</div>
+    <div class="field"><div class="label">Username</div><input class="input" id="adminUser" placeholder="admin"></div>
+    <div class="field"><div class="label">Password</div><input class="input" id="adminPass" type="password" placeholder="••••••••"></div>
+    <div class="field"><div class="label">Hoặc ADMIN_TOKEN</div><input class="input" id="adminToken" placeholder="Dán token nếu muốn vào nhanh"></div>
+    <div class="btns"><button class="btn primary" id="adminLoginBtn"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</button></div>
+    <div class="status" id="adminLoginStatus"></div>
+  </div>
+
+  <div id="adminApp" class="hidden">
+    <div class="hero">
+      <div>
+        <h1>ADMIN CONTROL</h1>
+        <p>Quản lý key, thiết bị, thông báo và theo dõi free-key sessions. Telegram bot dùng /login, /taokey, /quanlithietbi, /xemkey, /khoakey, /mokey, /thongbao.</p>
+      </div>
+      <div class="btns">
+        <button class="btn" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Làm mới</button>
+        <button class="btn green" id="adminLogoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Thoát admin</button>
+      </div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="title"><i class="fa-solid fa-key"></i> Tạo key mới</div>
+        <div class="row">
+          <div class="field"><div class="label">Prefix</div><input class="input" id="prefix" value="VIP"></div>
+          <div class="field"><div class="label">Hạn (giờ)</div><input class="input" id="hours" type="number" value="24"></div>
+        </div>
+        <div class="row">
+          <div class="field"><div class="label">Số thiết bị</div><input class="input" id="maxDevices" type="number" value="1"></div>
+          <div class="field"><div class="label">Permanent</div><select class="select" id="permanent"><option value="false">Không</option><option value="true">Có</option></select></div>
+        </div>
+        <div class="field"><div class="label">Ghi chú</div><input class="input" id="note" placeholder="Key cho tester hoặc khách hàng"></div>
+        <div class="btns"><button class="btn primary" id="createKeyBtn"><i class="fa-solid fa-plus"></i> Tạo key</button></div>
+        <div class="status" id="createKeyStatus"></div>
+        <div class="notice">Key tạo từ đây có thể đăng nhập trực tiếp trên app. Key free sẽ được tạo tự động ở portal riêng sau khi xác minh.</div>
+      </div>
+
+      <div class="card">
+        <div class="title"><i class="fa-solid fa-bullhorn"></i> Gửi thông báo</div>
+        <div class="field"><div class="label">Tiêu đề</div><input class="input" id="notifyTitle" placeholder="Ví dụ: Bảo trì hệ thống"></div>
+        <div class="field"><div class="label">Loại</div><select class="select" id="notifyType"><option value="info">Info</option><option value="success">Success</option><option value="warn">Warn</option><option value="danger">Danger</option></select></div>
+        <div class="field"><div class="label">Nội dung</div><textarea class="textarea" id="notifyMessage" placeholder="Nhập nội dung gửi tới tất cả người dùng"></textarea></div>
+        <div class="btns"><button class="btn primary" id="notifyBtn"><i class="fa-solid fa-paper-plane"></i> Gửi thông báo</button></div>
+        <div class="status" id="notifyStatus"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <div class="title"><i class="fa-solid fa-list"></i> Danh sách key</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Key</th><th>Loại</th><th>Trạng thái</th><th>Thiết bị</th><th>Hết hạn</th><th>Ghi chú</th><th>Hành động</th></tr></thead>
+          <tbody id="keysTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <div class="title"><i class="fa-solid fa-mobile-screen-button"></i> Thiết bị</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Device ID</th><th>Key</th><th>Lần đầu</th><th>Lần cuối</th><th>User agent</th><th>Thao tác</th></tr></thead>
+          <tbody id="devicesTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let adminSession = localStorage.getItem('secureapp_admin_session') || '';
+async function api(url, options={}){
+  const response = await fetch(url, { headers:{ 'Content-Type':'application/json', 'x-admin-session': adminSession, ...(options.headers||{}) }, ...options });
+  const data = await response.json().catch(()=>({ ok:false, message:'Phản hồi không hợp lệ.' }));
+  if(!response.ok || data.ok===false) throw new Error(data.message || 'Yêu cầu thất bại.');
+  return data;
+}
+function setStatus(id, text='', type='warn'){ const el=document.getElementById(id); el.textContent=text; el.className='status '+type; }
+function fmt(ts){ return ts ? new Date(ts).toLocaleString('vi-VN') : 'Vĩnh viễn'; }
+function renderOverview(data){
+  const stats = data.totals;
+  document.getElementById('stats').innerHTML = [
+    ['Tổng key', stats.keys],
+    ['Key hoạt động', stats.activeKeys],
+    ['Key free', stats.freeKeys],
+    ['Thiết bị', stats.devices],
+    ['Thông báo', stats.notifications]
+  ].map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+
+  document.getElementById('keysTable').innerHTML = data.keys.map(k=>`<tr>
+    <td class="mono">${k.key}</td>
+    <td>${k.type}</td>
+    <td><span class="badge ${k.active ? 'on':'off'}">${k.active ? 'ON':'OFF'}</span></td>
+    <td>${k.deviceCount} / ${k.maxDevices}</td>
+    <td>${fmt(k.expiresAt)}</td>
+    <td class="small">${k.note || '—'}</td>
+    <td>
+      <div class="btns">
+        <button class="btn" onclick="toggleKey('${k.key}', ${!k.active})">${k.active ? 'Khóa':'Mở'}</button>
+      </div>
+    </td>
+  </tr>`).join('') || '<tr><td colspan="7" class="small">Chưa có key nào.</td></tr>';
+
+  document.getElementById('devicesTable').innerHTML = data.devices.map(d=>`<tr>
+    <td class="mono">${d.deviceId}</td>
+    <td class="mono">${d.key}</td>
+    <td>${fmt(d.firstLogin)}</td>
+    <td>${fmt(d.lastLogin)}</td>
+    <td class="small">${d.userAgent || '—'}</td>
+    <td><button class="btn" onclick="unbindDevice('${d.key}','${d.deviceId}')">Gỡ</button></td>
+  </tr>`).join('') || '<tr><td colspan="6" class="small">Chưa có thiết bị nào.</td></tr>';
+}
+async function loadOverview(){
+  try{
+    const data = await api('/api/admin/overview');
+    renderOverview(data);
+  }catch(error){
+    setStatus('adminLoginStatus', error.message, 'err');
+    showLogin();
+  }
+}
+function showLogin(){
+  document.getElementById('adminLogin').classList.remove('hidden');
+  document.getElementById('adminApp').classList.add('hidden');
+}
+function showApp(){
+  document.getElementById('adminLogin').classList.add('hidden');
+  document.getElementById('adminApp').classList.remove('hidden');
+}
+async function login(){
+  try{
+    setStatus('adminLoginStatus', 'Đang xác thực...', 'warn');
+    const data = await fetch('/api/admin/login', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('adminUser').value.trim(),
+        password: document.getElementById('adminPass').value.trim(),
+        token: document.getElementById('adminToken').value.trim()
+      })
+    }).then(r=>r.json());
+    if(!data.ok) throw new Error(data.message || 'Đăng nhập thất bại.');
+    adminSession = data.sessionToken;
+    localStorage.setItem('secureapp_admin_session', adminSession);
+    setStatus('adminLoginStatus', 'Đăng nhập thành công.', 'ok');
+    showApp();
+    loadOverview();
+  }catch(error){
+    setStatus('adminLoginStatus', error.message, 'err');
+  }
+}
+async function createKey(){
+  try{
+    setStatus('createKeyStatus', 'Đang tạo key...', 'warn');
+    const data = await api('/api/admin/create-key', {
+      method:'POST',
+      body: JSON.stringify({
+        prefix: document.getElementById('prefix').value.trim() || 'VIP',
+        hours: Number(document.getElementById('hours').value || 24),
+        maxDevices: Number(document.getElementById('maxDevices').value || 1),
+        note: document.getElementById('note').value.trim(),
+        permanent: document.getElementById('permanent').value === 'true'
+      })
+    });
+    setStatus('createKeyStatus', `Đã tạo key: ${data.key}`, 'ok');
+    loadOverview();
+  }catch(error){
+    setStatus('createKeyStatus', error.message, 'err');
+  }
+}
+async function sendNotice(){
+  try{
+    setStatus('notifyStatus', 'Đang gửi thông báo...', 'warn');
+    await api('/api/admin/notify', {
+      method:'POST',
+      body: JSON.stringify({
+        title: document.getElementById('notifyTitle').value.trim(),
+        message: document.getElementById('notifyMessage').value.trim(),
+        type: document.getElementById('notifyType').value
+      })
+    });
+    setStatus('notifyStatus', 'Đã gửi thông báo.', 'ok');
+    loadOverview();
+  }catch(error){
+    setStatus('notifyStatus', error.message, 'err');
+  }
+}
+async function toggleKey(key, active){
+  try{
+    await api('/api/admin/toggle-key', { method:'POST', body: JSON.stringify({ key, active }) });
+    loadOverview();
+  }catch(error){ alert(error.message); }
+}
+async function unbindDevice(key, deviceId){
+  try{
+    await api('/api/admin/unbind-device', { method:'POST', body: JSON.stringify({ key, deviceId }) });
+    loadOverview();
+  }catch(error){ alert(error.message); }
+}
+function logout(){
+  adminSession='';
+  localStorage.removeItem('secureapp_admin_session');
+  showLogin();
+}
+document.getElementById('adminLoginBtn').onclick = login;
+document.getElementById('createKeyBtn').onclick = createKey;
+document.getElementById('notifyBtn').onclick = sendNotice;
+document.getElementById('refreshBtn').onclick = loadOverview;
+document.getElementById('adminLogoutBtn').onclick = logout;
+if(adminSession){ showApp(); loadOverview(); }
+</script>
+</body>
+</html>

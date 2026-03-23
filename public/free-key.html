@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SecureApp Pro V5 — Free Key Portal</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#ff1a1a;--red2:#ff4444;--gold:#ffd600;--green:#00e676;--text:#f3f3f3;--muted:#888;--bg:#050507;--line:rgba(255,26,26,.35)}
+body{font-family:'Nunito',sans-serif;background:#050507;color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 15% 10%,rgba(255,26,26,.16),transparent 35%),radial-gradient(circle at 85% 85%,rgba(255,68,68,.1),transparent 35%);pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:28px 18px 60px}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:22px}
+.hero-logo{width:92px;height:92px;border-radius:24px;border:2px solid var(--line);box-shadow:0 0 26px rgba(255,26,26,.35);display:flex;align-items:center;justify-content:center;background:rgba(255,26,26,.05);margin-bottom:14px}
+.hero-logo i{font-size:2.3rem;color:var(--red);filter:drop-shadow(0 0 12px rgba(255,26,26,.6))}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:1.55rem;letter-spacing:.08em;color:var(--red2);text-shadow:0 0 16px rgba(255,26,26,.5)}
+.hero p{margin-top:8px;font-size:.88rem;color:var(--muted);max-width:720px;line-height:1.75}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:rgba(255,26,26,.03);border:1.5px solid var(--line);border-radius:22px;padding:22px;backdrop-filter:blur(16px);box-shadow:0 0 24px rgba(255,26,26,.12),inset 0 0 18px rgba(255,26,26,.03)}
+.card-title{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-family:'Orbitron',sans-serif;margin-bottom:16px}
+.card-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.step-list{display:grid;gap:12px}
+.step{display:flex;gap:12px;align-items:flex-start;padding:14px 14px;background:rgba(255,26,26,.03);border:1px solid rgba(255,26,26,.12);border-radius:14px}
+.step-no{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,26,26,.08);border:1.5px solid var(--line);color:var(--red2);font-weight:900;font-family:'Orbitron',sans-serif;flex-shrink:0}
+.step h3{font-size:.92rem;font-weight:800;margin-bottom:3px}
+.step p{font-size:.78rem;color:var(--muted);line-height:1.65}
+.device-box{display:grid;gap:12px;margin-top:16px}
+.device-field{display:grid;gap:6px}
+.label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.input{width:100%;padding:12px 14px;background:rgba(0,0,0,.45);border:1px solid rgba(255,26,26,.22);border-radius:12px;color:var(--text);font-size:.9rem;outline:none}
+.link-row,.key-row{display:flex;gap:10px;flex-wrap:wrap}
+.link-box,.key-box{flex:1;min-width:240px;padding:14px 16px;background:rgba(0,0,0,.45);border:1px solid rgba(255,26,26,.22);border-radius:14px;font-size:.86rem;word-break:break-all}
+.key-box{font-family:'Orbitron',sans-serif;color:var(--gold);letter-spacing:.08em}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.btn{padding:12px 20px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,26,26,.08);color:var(--red2);font-weight:800;font-size:.82rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .22s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 18px rgba(255,26,26,.28)}
+.btn.primary{background:linear-gradient(135deg,rgba(255,26,26,.18),rgba(255,68,68,.08));color:#fff}
+.btn.gold{border-color:rgba(255,214,0,.4);color:var(--gold);background:rgba(255,214,0,.06)}
+.status{margin-top:14px;min-height:22px;font-size:.82rem;font-weight:700}
+.status.ok{color:var(--green)} .status.err{color:#ff9898} .status.warn{color:var(--gold)}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;border:1.5px solid rgba(0,230,118,.35);color:var(--green);font-size:.72rem;font-weight:800}
+.badge i{font-size:.72rem}
+.side-list{display:grid;gap:10px}
+.side-item{padding:14px;background:rgba(255,26,26,.03);border:1px solid rgba(255,26,26,.12);border-radius:14px}
+.side-item h4{font-size:.84rem;font-weight:800;margin-bottom:4px}
+.side-item p{font-size:.76rem;color:var(--muted);line-height:1.6}
+.footer-note{margin-top:18px;font-size:.75rem;color:#666;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-logo"><i class="fa-solid fa-gift"></i></div>
+    <h1>FREE KEY PORTAL</h1>
+    <p>Trang này tách riêng khỏi app chính. Mỗi thiết bị được cấp một key free ngẫu nhiên, thời hạn 5 giờ, sau khi hoàn tất bước xác minh bằng short-link.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-link"></i> Quy trình nhận key</div>
+      <div class="step-list">
+        <div class="step"><div class="step-no">1</div><div><h3>Tạo short-link xác minh</h3><p>Nhấn nút tạo link để hệ thống sinh short-link cho thiết bị hiện tại.</p></div></div>
+        <div class="step"><div class="step-no">2</div><div><h3>Hoàn tất bước xác minh</h3><p>Mở short-link, hoàn thành các bước bên phía Link4m, sau đó hệ thống sẽ chuyển về trang này.</p></div></div>
+        <div class="step"><div class="step-no">3</div><div><h3>Nhận key free 5 giờ</h3><p>Chỉ khi xác minh thành công, máy chủ mới cấp key. Nếu thiết bị đã có key free còn hạn, hệ thống sẽ trả lại đúng key đó.</p></div></div>
+      </div>
+      <div class="device-box">
+        <div class="device-field"><div class="label">Device ID</div><input class="input" id="deviceId" readonly></div>
+        <div class="device-field"><div class="label">RID xác minh</div><input class="input" id="ridField" readonly placeholder="Chưa có RID"></div>
+      </div>
+      <div class="btns">
+        <button class="btn primary" id="createBtn"><i class="fa-solid fa-link"></i> Tạo Link Xác Minh</button>
+        <button class="btn" id="openBtn" disabled><i class="fa-solid fa-up-right-from-square"></i> Mở Short-Link</button>
+        <button class="btn gold" id="claimBtn" disabled><i class="fa-solid fa-key"></i> Nhận Key Free</button>
+      </div>
+      <div class="status" id="statusText"></div>
+      <div class="device-box">
+        <div class="device-field"><div class="label">Short-link hiện tại</div><div class="link-row"><div class="link-box" id="shortLinkBox">Chưa tạo link.</div><button class="btn" id="copyLinkBtn"><i class="fa-solid fa-copy"></i> Copy</button></div></div>
+        <div class="device-field"><div class="label">Key đã nhận</div><div class="key-row"><div class="key-box" id="keyBox">—</div><button class="btn" id="copyKeyBtn"><i class="fa-solid fa-copy"></i> Copy</button></div></div>
+      </div>
+      <div class="btns" style="margin-top:18px"><a class="btn" href="/index.html"><i class="fa-solid fa-left-long"></i> Quay lại App</a></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-shield"></i> Trạng thái portal</div>
+      <div class="side-list">
+        <div class="side-item"><h4>Chỉ cấp key khi verify thành công</h4><p>Portal kiểm tra RID, state và thiết bị trước khi cấp key.</p></div>
+        <div class="side-item"><h4>1 thiết bị = 1 key free còn hạn</h4><p>Thiết bị có key free còn hạn sẽ nhận lại đúng key đó, tránh tạo trùng vô hạn.</p></div>
+        <div class="side-item"><h4>Admin & bot quản trị tách riêng</h4><p>Quản trị được thực hiện ở /admin.html và bot Telegram, không hiển thị trong app người dùng.</p></div>
+      </div>
+      <div style="margin-top:16px"><span class="badge"><i class="fa-solid fa-circle-check"></i> TTL free key: 5 giờ</span></div>
+      <div class="footer-note">Nếu short-link không mở được, kiểm tra lại LINK4M_API_TOKEN trong biến môi trường hoặc dùng chế độ fallback direct link.</div>
+    </div>
+  </div>
+</div>
+<script>
+const deviceId = (()=>{ let id = localStorage.getItem('_secureapp_v5_device'); if(!id){ const arr=new Uint8Array(16); crypto.getRandomValues(arr); id=Array.from(arr).map(b=>b.toString(16).padStart(2,'0')).join(''); localStorage.setItem('_secureapp_v5_device',id); } return id; })();
+let currentRid = '';
+let currentShortUrl = '';
+document.getElementById('deviceId').value = deviceId;
+function setStatus(text, type='warn'){ const el=document.getElementById('statusText'); el.textContent=text; el.className='status '+type; }
+async function api(url, options={}){
+  const response = await fetch(url, { headers:{ 'Content-Type':'application/json', ...(options.headers||{}) }, ...options });
+  const data = await response.json().catch(()=>({ ok:false, message:'Phản hồi không hợp lệ.' }));
+  if(!response.ok || data.ok===false) throw new Error(data.message || 'Yêu cầu thất bại.');
+  return data;
+}
+async function createLink(){
+  try{
+    setStatus('Đang tạo short-link xác minh...', 'warn');
+    const data = await api('/api/free-key/create-link', { method:'POST', body: JSON.stringify({ deviceId }) });
+    currentRid = data.rid;
+    currentShortUrl = data.shortUrl;
+    document.getElementById('ridField').value = currentRid;
+    document.getElementById('shortLinkBox').textContent = currentShortUrl;
+    document.getElementById('openBtn').disabled = false;
+    document.getElementById('claimBtn').disabled = true;
+    setStatus('Đã tạo link. Hãy mở link và hoàn tất bước xác minh.', 'ok');
+  }catch(error){
+    setStatus(error.message, 'err');
+  }
+}
+function openLink(){ if(currentShortUrl) window.open(currentShortUrl, '_blank'); }
+async function claimKey(){
+  try{
+    if(!currentRid) throw new Error('Chưa có RID để nhận key.');
+    setStatus('Đang nhận key free từ máy chủ...', 'warn');
+    const data = await api('/api/free-key/claim', { method:'POST', body: JSON.stringify({ rid: currentRid, deviceId, userAgent: navigator.userAgent }) });
+    document.getElementById('keyBox').textContent = data.key;
+    setStatus(data.reused ? 'Thiết bị này đã có key free còn hạn. Đã trả lại key hiện có.' : 'Đã cấp key free mới thành công.', 'ok');
+  }catch(error){
+    setStatus(error.message, 'err');
+  }
+}
+function copyText(text){ navigator.clipboard.writeText(text).catch(()=>{}); }
+document.getElementById('createBtn').onclick = createLink;
+document.getElementById('openBtn').onclick = openLink;
+document.getElementById('claimBtn').onclick = claimKey;
+document.getElementById('copyLinkBtn').onclick = ()=> copyText(document.getElementById('shortLinkBox').textContent || '');
+document.getElementById('copyKeyBtn').onclick = ()=> copyText(document.getElementById('keyBox').textContent || '');
+(function(){
+  const params = new URLSearchParams(location.search);
+  const rid = params.get('rid');
+  const verified = params.get('verified');
+  if(rid){
+    currentRid = rid;
+    document.getElementById('ridField').value = rid;
+  }
+  if(verified === '1'){
+    document.getElementById('claimBtn').disabled = false;
+    setStatus('Xác minh thành công. Bạn có thể bấm "Nhận Key Free" ngay bây giờ.', 'ok');
+  } else {
+    setStatus('Sẵn sàng tạo short-link cho thiết bị hiện tại.', 'warn');
+  }
+})();
+</script>
+</body>
+</html>
