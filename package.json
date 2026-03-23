@@ -1,0 +1,16 @@
+{
+  "name": "secureapp-pro-v5",
+  "version": "1.0.0",
+  "description": "License portal with free-key flow, admin panel, and Telegram bot",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
