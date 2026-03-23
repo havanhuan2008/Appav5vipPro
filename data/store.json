@@ -1,0 +1,16 @@
+{
+  "keys": {},
+  "freeKeySessions": {},
+  "notifications": [
+    {
+      "id": "notif_welcome",
+      "title": "Hệ thống đã sẵn sàng",
+      "message": "Portal đã sẵn sàng để cấp key free 5 giờ theo thiết bị.",
+      "type": "info",
+      "createdAt": 1760000000000
+    }
+  ],
+  "adminSessions": {},
+  "botSessions": {},
+  "botOffset": 0
+}
