@@ -5,68 +5,364 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SecureApp Pro V5 — Admin</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--red:#ff1a1a;--red2:#ff4444;--green:#00e676;--gold:#ffd600;--text:#f2f2f2;--muted:#8a8a8a;--bg:#050507;--line:rgba(255,26,26,.35)}
-body{font-family:'Nunito',sans-serif;background:#050507;color:var(--text);min-height:100vh}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 15% 10%,rgba(255,26,26,.16),transparent 35%),radial-gradient(circle at 80% 85%,rgba(255,68,68,.08),transparent 35%);pointer-events:none}
-.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:24px 18px 60px}
-.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
-.hero h1{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:var(--red2);letter-spacing:.08em}
-.hero p{font-size:.82rem;color:var(--muted);margin-top:6px}
-.card{background:rgba(255,26,26,.03);border:1.5px solid var(--line);border-radius:22px;padding:20px;backdrop-filter:blur(16px);box-shadow:0 0 26px rgba(255,26,26,.12),inset 0 0 12px rgba(255,26,26,.02)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:920px){.grid{grid-template-columns:1fr}}
-.title{display:flex;align-items:center;gap:10px;font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-family:'Orbitron',sans-serif;margin-bottom:16px}
-.title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
-.field{display:grid;gap:6px;margin-bottom:12px}
-.label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
-.input,.select,.textarea{width:100%;padding:12px 14px;background:rgba(0,0,0,.45);border:1px solid rgba(255,26,26,.22);border-radius:12px;color:var(--text);font-size:.9rem;outline:none}
-.textarea{min-height:100px;resize:vertical}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:640px){.row{grid-template-columns:1fr}}
-.btns{display:flex;gap:10px;flex-wrap:wrap}
-.btn{padding:12px 18px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,26,26,.08);color:var(--red2);font-weight:800;font-size:.8rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .22s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 0 18px rgba(255,26,26,.22)}
-.btn.primary{background:linear-gradient(135deg,rgba(255,26,26,.18),rgba(255,68,68,.08));color:#fff}
-.btn.green{border-color:rgba(0,230,118,.35);color:var(--green);background:rgba(0,230,118,.05)}
-.status{margin-top:12px;min-height:22px;font-size:.8rem;font-weight:700}.status.ok{color:var(--green)}.status.err{color:#ff9898}.status.warn{color:var(--gold)}
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
-@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
-.stat{padding:16px;border-radius:18px;background:rgba(255,26,26,.03);border:1px solid rgba(255,26,26,.16)}
-.stat .k{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
-.stat .v{margin-top:6px;font-family:'Orbitron',sans-serif;font-size:1.05rem;color:var(--red2)}
-.table-wrap{overflow:auto;border:1px solid rgba(255,26,26,.16);border-radius:14px}
-table{width:100%;border-collapse:collapse;font-size:.82rem}
-th,td{padding:12px 10px;border-bottom:1px solid rgba(255,26,26,.08);text-align:left;vertical-align:top}
-th{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}
-.mono{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:.04em}
-.small{font-size:.74rem;color:var(--muted)}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,26,26,.16);font-size:.72rem;font-weight:800}
-.badge.on{color:var(--green);border-color:rgba(0,230,118,.25)}
-.badge.off{color:#ff9898;border-color:rgba(255,26,26,.25)}
-.login-wrap{max-width:460px;margin:60px auto 0}
-.hidden{display:none !important}
-.notice{font-size:.75rem;color:#777;margin-top:8px;line-height:1.6}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#ff1a1a;--red2:#ff4444;--red3:#cc0000;
+  --red-glow:rgba(255,26,26,0.55);--red-border:rgba(255,26,26,0.35);
+  --green:#00e676;--gold:#ffd600;--text:#f2f2f2;--muted:#888;--bg:#050507;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;}
+
+/* === AURA BG === */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(255,26,26,0.14),transparent 35%),
+    radial-gradient(circle at 80% 85%,rgba(255,68,68,0.08),transparent 35%);
+  pointer-events:none;z-index:0;
+}
+
+/* === SCAN LINE === */
+body::after{
+  content:'';position:fixed;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--red),rgba(255,100,100,0.8),var(--red),transparent);
+  box-shadow:0 0 12px var(--red);animation:scanPulse 3s ease-in-out infinite alternate;z-index:9999;
+}
+@keyframes scanPulse{0%{opacity:0.35;}100%{opacity:1;}}
+
+/* === WRAP === */
+.wrap{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:26px 18px 70px;}
+
+/* === HIDDEN === */
+.hidden{display:none !important;}
+
+/* ============================================================
+   LOGIN SCREEN
+   ============================================================ */
+.login-wrap{max-width:460px;margin:70px auto 0;}
+
+.login-card{
+  background:linear-gradient(145deg,rgba(14,14,22,0.97),rgba(8,8,14,0.99));
+  border:1.5px solid var(--red-border);border-radius:28px;
+  padding:32px 28px;
+  box-shadow:0 30px 90px rgba(0,0,0,0.7),0 0 50px rgba(255,26,26,0.1),inset 0 1px 0 rgba(255,255,255,0.04);
+  position:relative;overflow:hidden;
+}
+.login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,var(--red),#ff6b6b,var(--red),transparent);}
+.login-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,26,26,0.05)0%,transparent 60%);pointer-events:none;}
+
+/* Login logo */
+.login-logo{display:flex;flex-direction:column;align-items:center;margin-bottom:26px;}
+.login-logo-icon{
+  width:76px;height:76px;border-radius:22px;
+  background:linear-gradient(135deg,rgba(255,26,26,0.14),rgba(180,0,0,0.08));
+  border:2px solid var(--red-border);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 38px rgba(255,26,26,0.3),0 0 80px rgba(255,26,26,0.08);
+  font-size:1.9rem;color:var(--red);
+  position:relative;margin-bottom:14px;
+}
+.login-logo-icon::before{
+  content:'';position:absolute;inset:-6px;border-radius:26px;
+  border:1.5px solid transparent;
+  background:conic-gradient(from 0deg,var(--red),rgba(255,26,26,0.06),var(--red2),rgba(255,26,26,0.06),var(--red)) border-box;
+  animation:spinRing 5s linear infinite;
+}
+@keyframes spinRing{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.login-logo-title{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:900;color:var(--red2);letter-spacing:0.08em;text-shadow:0 0 20px var(--red);}
+.login-logo-sub{font-size:0.68rem;color:var(--muted);font-family:'Quicksand',sans-serif;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;margin-top:5px;}
+
+/* ============================================================
+   CARD (shared)
+   ============================================================ */
+.card{
+  background:linear-gradient(145deg,rgba(14,14,22,0.97),rgba(8,8,14,0.99));
+  border:1.5px solid var(--red-border);border-radius:22px;padding:22px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.5),0 0 28px rgba(255,26,26,0.08),inset 0 1px 0 rgba(255,255,255,0.03);
+  position:relative;overflow:hidden;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,26,26,0.3),transparent);}
+
+/* ============================================================
+   SECTION TITLE
+   ============================================================ */
+.title{
+  display:flex;align-items:center;gap:10px;
+  font-size:0.72rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--red);font-family:'Quicksand',sans-serif;margin-bottom:18px;
+  text-shadow:0 0 10px rgba(255,26,26,0.4);
+}
+.title i{font-size:0.85rem;}
+.title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,26,26,0.35),transparent);}
+
+/* ============================================================
+   FORM FIELDS
+   ============================================================ */
+.field{display:grid;gap:7px;margin-bottom:14px;}
+.label{
+  font-size:0.68rem;color:var(--muted);text-transform:uppercase;
+  letter-spacing:0.1em;font-weight:700;font-family:'Quicksand',sans-serif;
+  display:flex;align-items:center;gap:6px;
+}
+.label i{color:var(--red);font-size:0.7rem;}
+
+.input,.select,.textarea{
+  width:100%;padding:12px 16px;
+  background:rgba(0,0,0,0.5);
+  border:1px solid rgba(255,26,26,0.2);border-radius:13px;
+  color:var(--text);font-size:0.9rem;
+  font-family:'Nunito',sans-serif;font-weight:600;
+  outline:none;
+  transition:border-color 0.3s,box-shadow 0.3s,background 0.3s;
+}
+.input:focus,.select:focus,.textarea:focus{
+  border-color:var(--red-border);
+  box-shadow:0 0 0 3px rgba(255,26,26,0.1),0 0 20px rgba(255,26,26,0.2);
+  background:rgba(0,0,0,0.7);
+}
+.input::placeholder,.textarea::placeholder{color:#333;font-size:0.86rem;}
+.select{cursor:pointer;}
+.select option{background:#0e0e1a;color:var(--text);}
+.textarea{min-height:100px;resize:vertical;line-height:1.6;}
+
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:640px){.row{grid-template-columns:1fr;}}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btns{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{
+  padding:11px 20px;border-radius:999px;
+  border:1.5px solid var(--red-border);
+  background:rgba(255,26,26,0.07);color:var(--red2);
+  font-family:'Quicksand',sans-serif;font-weight:800;font-size:0.8rem;
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  transition:all 0.22s;letter-spacing:0.04em;position:relative;overflow:hidden;
+}
+.btn::before{content:'';position:absolute;inset:0;background:rgba(255,26,26,0.1);transform:scaleX(0);transform-origin:left;transition:transform 0.25s;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 22px rgba(255,26,26,0.3);border-color:var(--red2);}
+.btn:hover::before{transform:scaleX(1);}
+.btn:active{transform:translateY(0);}
+.btn.primary{
+  background:linear-gradient(135deg,rgba(255,26,26,0.2),rgba(255,68,68,0.1));color:#fff;
+  box-shadow:0 0 18px rgba(255,26,26,0.18);
+}
+.btn.primary:hover{box-shadow:0 0 36px rgba(255,26,26,0.45);}
+.btn.green{
+  border-color:rgba(0,230,118,0.35);color:var(--green);
+  background:rgba(0,230,118,0.05);
+}
+.btn.green::before{background:rgba(0,230,118,0.08);}
+.btn.green:hover{box-shadow:0 0 22px rgba(0,230,118,0.25);border-color:rgba(0,230,118,0.55);}
+.btn.danger{
+  border-color:rgba(255,100,100,0.4);color:#ff8888;
+  background:rgba(255,26,26,0.06);
+}
+.btn.danger:hover{box-shadow:0 0 18px rgba(255,26,26,0.3);}
+
+/* ============================================================
+   STATUS BAR
+   ============================================================ */
+.status{
+  margin-top:12px;min-height:28px;
+  display:flex;align-items:center;gap:7px;
+  font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;
+  border-radius:10px;padding:0;transition:all 0.3s;
+}
+.status:not(:empty){padding:8px 14px;background:rgba(255,26,26,0.04);border:1px solid rgba(255,26,26,0.1);}
+.status.ok{color:var(--green);background:rgba(0,230,118,0.06)!important;border-color:rgba(0,230,118,0.18)!important;}
+.status.err{color:#ff9898;background:rgba(255,26,26,0.06)!important;border-color:rgba(255,26,26,0.18)!important;}
+.status.warn{color:var(--gold);background:rgba(255,214,0,0.05)!important;border-color:rgba(255,214,0,0.15)!important;}
+
+/* ============================================================
+   NOTICE
+   ============================================================ */
+.notice{
+  font-size:0.74rem;color:#666;margin-top:10px;line-height:1.65;
+  font-family:'Nunito',sans-serif;font-weight:600;
+  padding:10px 14px;border-radius:10px;
+  background:rgba(255,214,0,0.04);border:1px solid rgba(255,214,0,0.12);
+  display:flex;align-items:flex-start;gap:8px;
+}
+.notice::before{content:'\f05a';font-family:'Font Awesome 6 Free';font-weight:900;font-size:0.72rem;color:rgba(255,214,0,0.5);margin-top:1px;flex-shrink:0;}
+
+/* ============================================================
+   GRID LAYOUT
+   ============================================================ */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:920px){.grid{grid-template-columns:1fr;}}
+
+/* ============================================================
+   HERO HEADER
+   ============================================================ */
+.hero{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;margin-bottom:22px;
+  background:linear-gradient(135deg,rgba(14,14,22,0.97),rgba(8,8,14,0.99));
+  border:1.5px solid var(--red-border);border-radius:22px;
+  padding:20px 24px;
+  box-shadow:0 6px 36px rgba(0,0,0,0.5),0 0 30px rgba(255,26,26,0.08),inset 0 1px 0 rgba(255,255,255,0.03);
+  position:relative;overflow:hidden;
+}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),#ff6b6b,var(--red),transparent);}
+.hero-left{display:flex;align-items:center;gap:16px;}
+.hero-icon{
+  width:50px;height:50px;border-radius:16px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(255,26,26,0.14),rgba(180,0,0,0.08));
+  border:1.5px solid var(--red-border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;color:var(--red);
+  box-shadow:0 0 24px rgba(255,26,26,0.3);
+}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:1.2rem;color:var(--red2);letter-spacing:0.08em;text-shadow:0 0 16px var(--red);}
+.hero p{font-size:0.75rem;color:var(--muted);margin-top:5px;font-family:'Nunito',sans-serif;line-height:1.6;font-weight:600;}
+
+/* ============================================================
+   STAT CARDS
+   ============================================================ */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.stats{grid-template-columns:1fr 1fr;}}
+
+.stat{
+  padding:18px 16px;border-radius:18px;
+  background:linear-gradient(135deg,rgba(14,14,22,0.97),rgba(8,8,14,0.99));
+  border:1.5px solid rgba(255,26,26,0.18);
+  box-shadow:0 4px 20px rgba(0,0,0,0.4),0 0 16px rgba(255,26,26,0.06);
+  position:relative;overflow:hidden;
+  transition:border-color 0.3s,box-shadow 0.3s,transform 0.2s;
+}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,26,26,0.3),transparent);}
+.stat:hover{border-color:rgba(255,26,26,0.35);box-shadow:0 6px 28px rgba(0,0,0,0.5),0 0 24px rgba(255,26,26,0.14);transform:translateY(-2px);}
+.stat .k{font-size:0.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-weight:700;font-family:'Quicksand',sans-serif;display:flex;align-items:center;gap:6px;}
+.stat .v{margin-top:10px;font-family:'Orbitron',sans-serif;font-size:1.15rem;color:var(--red2);text-shadow:0 0 10px rgba(255,26,26,0.3);}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.table-wrap{
+  overflow:auto;
+  border:1px solid rgba(255,26,26,0.15);border-radius:16px;
+}
+table{width:100%;border-collapse:collapse;font-size:0.82rem;min-width:680px;}
+thead{position:sticky;top:0;z-index:2;}
+th{
+  padding:13px 12px;
+  border-bottom:1px solid rgba(255,26,26,0.12);text-align:left;
+  font-size:0.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-weight:800;
+  font-family:'Quicksand',sans-serif;
+  background:rgba(8,8,14,0.95);backdrop-filter:blur(8px);
+  white-space:nowrap;
+}
+td{
+  padding:13px 12px;
+  border-bottom:1px solid rgba(255,26,26,0.06);
+  vertical-align:middle;
+  transition:background 0.2s;
+}
+tr:hover td{background:rgba(255,26,26,0.025);}
+tr:last-child td{border-bottom:none;}
+
+.mono{font-family:'Orbitron',sans-serif;font-size:0.73rem;letter-spacing:0.04em;color:var(--red2);}
+.small{font-size:0.74rem;color:var(--muted);line-height:1.5;}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:999px;
+  border:1px solid rgba(255,26,26,0.18);
+  font-size:0.7rem;font-weight:800;font-family:'Quicksand',sans-serif;
+  letter-spacing:0.04em;white-space:nowrap;
+}
+.badge.on{color:var(--green);border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.08);}
+.badge.on::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
+.badge.off{color:#ff9898;border-color:rgba(255,26,26,0.25);background:rgba(255,26,26,0.07);}
+.badge.off::before{content:'';width:6px;height:6px;border-radius:50%;background:#ff9898;}
+
+/* ============================================================
+   SWAL CUSTOM
+   ============================================================ */
+.swal2-popup{border-radius:24px!important;background:linear-gradient(135deg,#0e0e1a,#080810)!important;border:1.5px solid rgba(255,26,26,0.22)!important;box-shadow:0 30px 90px rgba(0,0,0,0.8),0 0 40px rgba(255,26,26,0.1)!important;}
+.swal2-title{font-family:'Quicksand',sans-serif!important;font-size:1.15rem!important;color:#fff!important;font-weight:800!important;}
+.swal2-html-container{color:#aaa!important;font-family:'Nunito',sans-serif!important;font-size:0.86rem!important;line-height:1.75!important;}
+.swal2-confirm{background:linear-gradient(135deg,rgba(255,26,26,0.28),rgba(255,68,68,0.16))!important;border:1.5px solid rgba(255,26,26,0.45)!important;border-radius:999px!important;font-family:'Quicksand',sans-serif!important;font-weight:800!important;padding:10px 28px!important;color:#fff!important;}
+.swal2-cancel{background:rgba(255,255,255,0.05)!important;border:1.5px solid rgba(255,255,255,0.1)!important;border-radius:999px!important;font-family:'Quicksand',sans-serif!important;font-weight:800!important;color:#888!important;padding:10px 28px!important;}
+.swal2-deny{background:rgba(255,26,26,0.12)!important;border:1.5px solid rgba(255,26,26,0.3)!important;border-radius:999px!important;font-family:'Quicksand',sans-serif!important;font-weight:800!important;color:#ff8888!important;padding:10px 28px!important;}
+.swal2-timer-progress-bar{background:var(--red)!important;}
+.swal2-input{background:rgba(0,0,0,0.5)!important;border:1px solid rgba(255,26,26,0.25)!important;border-radius:12px!important;color:#fff!important;font-family:'Nunito',sans-serif!important;}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,26,26,0.3);border-radius:99px;}
+
+/* ============================================================
+   SECTION MARGIN
+   ============================================================ */
+.mt{margin-top:18px;}
+
+/* Spinner animation */
+@keyframes gearSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div id="adminLogin" class="login-wrap card">
-    <div class="title"><i class="fa-solid fa-user-shield"></i> Đăng nhập quản trị</div>
-    <div class="field"><div class="label">Username</div><input class="input" id="adminUser" placeholder="admin"></div>
-    <div class="field"><div class="label">Password</div><input class="input" id="adminPass" type="password" placeholder="••••••••"></div>
-    <div class="field"><div class="label">Hoặc ADMIN_TOKEN</div><input class="input" id="adminToken" placeholder="Dán token nếu muốn vào nhanh"></div>
-    <div class="btns"><button class="btn primary" id="adminLoginBtn"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</button></div>
-    <div class="status" id="adminLoginStatus"></div>
+
+  <!-- ============================================================
+       LOGIN CARD
+       ============================================================ -->
+  <div id="adminLogin" class="login-wrap">
+    <div class="card login-card">
+      <!-- Login Logo -->
+      <div class="login-logo">
+        <div class="login-logo-icon"><i class="fa-solid fa-user-shield"></i></div>
+        <div class="login-logo-title">ADMIN PANEL</div>
+        <div class="login-logo-sub">SecureApp Pro V5 · Control Center</div>
+      </div>
+
+      <div class="field">
+        <div class="label"><i class="fa-solid fa-user"></i> Username</div>
+        <input class="input" id="adminUser" placeholder="admin" autocomplete="username"/>
+      </div>
+      <div class="field">
+        <div class="label"><i class="fa-solid fa-lock"></i> Password</div>
+        <input class="input" id="adminPass" type="password" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <div class="field">
+        <div class="label"><i class="fa-solid fa-bolt"></i> Hoặc ADMIN_TOKEN</div>
+        <input class="input" id="adminToken" placeholder="Dán token nếu muốn vào nhanh"/>
+      </div>
+      <div class="btns">
+        <button class="btn primary" id="adminLoginBtn" style="min-width:180px;">
+          <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập
+        </button>
+      </div>
+      <div class="status" id="adminLoginStatus"></div>
+    </div>
   </div>
 
+  <!-- ============================================================
+       ADMIN APP
+       ============================================================ -->
   <div id="adminApp" class="hidden">
+
+    <!-- HERO HEADER -->
     <div class="hero">
-      <div>
-        <h1>ADMIN CONTROL</h1>
-        <p>Quản lý key, thiết bị, thông báo và theo dõi free-key sessions. Telegram bot dùng /login, /taokey, /quanlithietbi, /xemkey, /khoakey, /mokey, /thongbao.</p>
+      <div class="hero-left">
+        <div class="hero-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <h1>ADMIN CONTROL</h1>
+          <p>Quản lý key, thiết bị, thông báo và theo dõi free-key sessions. Telegram bot dùng /login, /taokey, /quanlithietbi, /xemkey, /khoakey, /mokey, /thongbao.</p>
+        </div>
       </div>
       <div class="btns">
         <button class="btn" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Làm mới</button>
@@ -74,99 +370,198 @@ th{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.0
       </div>
     </div>
 
+    <!-- STATS -->
     <div class="stats" id="stats"></div>
 
+    <!-- CREATE KEY + SEND NOTICE -->
     <div class="grid">
+      <!-- CREATE KEY -->
       <div class="card">
         <div class="title"><i class="fa-solid fa-key"></i> Tạo key mới</div>
         <div class="row">
-          <div class="field"><div class="label">Prefix</div><input class="input" id="prefix" value="VIP"></div>
-          <div class="field"><div class="label">Hạn (giờ)</div><input class="input" id="hours" type="number" value="24"></div>
+          <div class="field">
+            <div class="label"><i class="fa-solid fa-tag"></i> Prefix</div>
+            <input class="input" id="prefix" value="VIP" placeholder="VIP"/>
+          </div>
+          <div class="field">
+            <div class="label"><i class="fa-solid fa-clock"></i> Hạn (giờ)</div>
+            <input class="input" id="hours" type="number" value="24" min="1"/>
+          </div>
         </div>
         <div class="row">
-          <div class="field"><div class="label">Số thiết bị</div><input class="input" id="maxDevices" type="number" value="1"></div>
-          <div class="field"><div class="label">Permanent</div><select class="select" id="permanent"><option value="false">Không</option><option value="true">Có</option></select></div>
+          <div class="field">
+            <div class="label"><i class="fa-solid fa-mobile-screen"></i> Số thiết bị</div>
+            <input class="input" id="maxDevices" type="number" value="1" min="1"/>
+          </div>
+          <div class="field">
+            <div class="label"><i class="fa-solid fa-infinity"></i> Permanent</div>
+            <select class="select" id="permanent">
+              <option value="false">Không</option>
+              <option value="true">Có</option>
+            </select>
+          </div>
         </div>
-        <div class="field"><div class="label">Ghi chú</div><input class="input" id="note" placeholder="Key cho tester hoặc khách hàng"></div>
-        <div class="btns"><button class="btn primary" id="createKeyBtn"><i class="fa-solid fa-plus"></i> Tạo key</button></div>
+        <div class="field">
+          <div class="label"><i class="fa-solid fa-pen-to-square"></i> Ghi chú</div>
+          <input class="input" id="note" placeholder="Key cho tester hoặc khách hàng"/>
+        </div>
+        <div class="btns">
+          <button class="btn primary" id="createKeyBtn">
+            <i class="fa-solid fa-plus"></i> Tạo key
+          </button>
+        </div>
         <div class="status" id="createKeyStatus"></div>
         <div class="notice">Key tạo từ đây có thể đăng nhập trực tiếp trên app. Key free sẽ được tạo tự động ở portal riêng sau khi xác minh.</div>
       </div>
 
+      <!-- SEND NOTICE -->
       <div class="card">
         <div class="title"><i class="fa-solid fa-bullhorn"></i> Gửi thông báo</div>
-        <div class="field"><div class="label">Tiêu đề</div><input class="input" id="notifyTitle" placeholder="Ví dụ: Bảo trì hệ thống"></div>
-        <div class="field"><div class="label">Loại</div><select class="select" id="notifyType"><option value="info">Info</option><option value="success">Success</option><option value="warn">Warn</option><option value="danger">Danger</option></select></div>
-        <div class="field"><div class="label">Nội dung</div><textarea class="textarea" id="notifyMessage" placeholder="Nhập nội dung gửi tới tất cả người dùng"></textarea></div>
-        <div class="btns"><button class="btn primary" id="notifyBtn"><i class="fa-solid fa-paper-plane"></i> Gửi thông báo</button></div>
+        <div class="field">
+          <div class="label"><i class="fa-solid fa-heading"></i> Tiêu đề</div>
+          <input class="input" id="notifyTitle" placeholder="Ví dụ: Bảo trì hệ thống"/>
+        </div>
+        <div class="field">
+          <div class="label"><i class="fa-solid fa-circle-info"></i> Loại</div>
+          <select class="select" id="notifyType">
+            <option value="info">Info</option>
+            <option value="success">Success</option>
+            <option value="warn">Warn</option>
+            <option value="danger">Danger</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="label"><i class="fa-solid fa-align-left"></i> Nội dung</div>
+          <textarea class="textarea" id="notifyMessage" placeholder="Nhập nội dung gửi tới tất cả người dùng"></textarea>
+        </div>
+        <div class="btns">
+          <button class="btn primary" id="notifyBtn">
+            <i class="fa-solid fa-paper-plane"></i> Gửi thông báo
+          </button>
+        </div>
         <div class="status" id="notifyStatus"></div>
       </div>
     </div>
 
-    <div class="card" style="margin-top:18px">
+    <!-- KEYS TABLE -->
+    <div class="card mt">
       <div class="title"><i class="fa-solid fa-list"></i> Danh sách key</div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Key</th><th>Loại</th><th>Trạng thái</th><th>Thiết bị</th><th>Hết hạn</th><th>Ghi chú</th><th>Hành động</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Loại</th>
+              <th>Trạng thái</th>
+              <th>Thiết bị</th>
+              <th>Hết hạn</th>
+              <th>Ghi chú</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
           <tbody id="keysTable"></tbody>
         </table>
       </div>
     </div>
 
-    <div class="card" style="margin-top:18px">
+    <!-- DEVICES TABLE -->
+    <div class="card mt">
       <div class="title"><i class="fa-solid fa-mobile-screen-button"></i> Thiết bị</div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Device ID</th><th>Key</th><th>Lần đầu</th><th>Lần cuối</th><th>User agent</th><th>Thao tác</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Device ID</th>
+              <th>Key</th>
+              <th>Lần đầu</th>
+              <th>Lần cuối</th>
+              <th>User agent</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
           <tbody id="devicesTable"></tbody>
         </table>
       </div>
     </div>
-  </div>
-</div>
+
+  </div><!-- end #adminApp -->
+</div><!-- end .wrap -->
+
+<!-- ============================================================
+     SCRIPTS — All logic kept exactly as original
+     ============================================================ -->
 <script>
 let adminSession = localStorage.getItem('secureapp_admin_session') || '';
+
+/* === API === */
 async function api(url, options={}){
-  const response = await fetch(url, { headers:{ 'Content-Type':'application/json', 'x-admin-session': adminSession, ...(options.headers||{}) }, ...options });
+  const response = await fetch(url, {
+    headers:{ 'Content-Type':'application/json', 'x-admin-session': adminSession, ...(options.headers||{}) },
+    ...options
+  });
   const data = await response.json().catch(()=>({ ok:false, message:'Phản hồi không hợp lệ.' }));
   if(!response.ok || data.ok===false) throw new Error(data.message || 'Yêu cầu thất bại.');
   return data;
 }
-function setStatus(id, text='', type='warn'){ const el=document.getElementById(id); el.textContent=text; el.className='status '+type; }
+
+/* === SET STATUS === */
+function setStatus(id, text='', type='warn'){
+  const el=document.getElementById(id);
+  const iconMap={ok:'fa-circle-check',err:'fa-circle-xmark',warn:'fa-circle-exclamation'};
+  el.innerHTML=text ? `<i class="fa-solid ${iconMap[type]||'fa-circle-info'}" style="font-size:.72rem;flex-shrink:0;"></i> ${text}` : '';
+  el.className='status '+type;
+}
+
+/* === FORMAT DATE === */
 function fmt(ts){ return ts ? new Date(ts).toLocaleString('vi-VN') : 'Vĩnh viễn'; }
+
+/* === RENDER OVERVIEW === */
 function renderOverview(data){
   const stats = data.totals;
+  const statIcons = ['fa-key','fa-circle-check','fa-gift','fa-mobile-screen','fa-bell'];
   document.getElementById('stats').innerHTML = [
     ['Tổng key', stats.keys],
     ['Key hoạt động', stats.activeKeys],
     ['Key free', stats.freeKeys],
     ['Thiết bị', stats.devices],
     ['Thông báo', stats.notifications]
-  ].map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+  ].map(([k,v],i)=>`
+    <div class="stat">
+      <div class="k"><i class="fa-solid ${statIcons[i]}" style="color:rgba(255,26,26,0.5);"></i> ${k}</div>
+      <div class="v">${v ?? '—'}</div>
+    </div>`).join('');
 
   document.getElementById('keysTable').innerHTML = data.keys.map(k=>`<tr>
     <td class="mono">${k.key}</td>
-    <td>${k.type}</td>
-    <td><span class="badge ${k.active ? 'on':'off'}">${k.active ? 'ON':'OFF'}</span></td>
-    <td>${k.deviceCount} / ${k.maxDevices}</td>
-    <td>${fmt(k.expiresAt)}</td>
+    <td><span style="font-size:.75rem;color:var(--muted);font-family:'Quicksand',sans-serif;font-weight:700;">${k.type}</span></td>
+    <td><span class="badge ${k.active ? 'on':'off'}">${k.active ? 'ACTIVE':'OFF'}</span></td>
+    <td style="font-family:'Orbitron',sans-serif;font-size:.75rem;">${k.deviceCount} <span style="color:var(--muted);">/</span> ${k.maxDevices}</td>
+    <td class="small">${fmt(k.expiresAt)}</td>
     <td class="small">${k.note || '—'}</td>
     <td>
       <div class="btns">
-        <button class="btn" onclick="toggleKey('${k.key}', ${!k.active})">${k.active ? 'Khóa':'Mở'}</button>
+        <button class="btn ${k.active ? 'danger':''}" style="padding:8px 14px;font-size:.74rem;" onclick="toggleKey('${k.key}', ${!k.active})">
+          <i class="fa-solid ${k.active ? 'fa-lock':'fa-lock-open'}"></i> ${k.active ? 'Khóa':'Mở'}
+        </button>
       </div>
     </td>
-  </tr>`).join('') || '<tr><td colspan="7" class="small">Chưa có key nào.</td></tr>';
+  </tr>`).join('') || '<tr><td colspan="7" class="small" style="text-align:center;padding:24px;">Chưa có key nào.</td></tr>';
 
   document.getElementById('devicesTable').innerHTML = data.devices.map(d=>`<tr>
-    <td class="mono">${d.deviceId}</td>
+    <td class="mono" style="font-size:.68rem;">${d.deviceId}</td>
     <td class="mono">${d.key}</td>
-    <td>${fmt(d.firstLogin)}</td>
-    <td>${fmt(d.lastLogin)}</td>
-    <td class="small">${d.userAgent || '—'}</td>
-    <td><button class="btn" onclick="unbindDevice('${d.key}','${d.deviceId}')">Gỡ</button></td>
-  </tr>`).join('') || '<tr><td colspan="6" class="small">Chưa có thiết bị nào.</td></tr>';
+    <td class="small">${fmt(d.firstLogin)}</td>
+    <td class="small">${fmt(d.lastLogin)}</td>
+    <td class="small" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${d.userAgent || '—'}</td>
+    <td>
+      <button class="btn danger" style="padding:8px 14px;font-size:.74rem;" onclick="unbindDevice('${d.key}','${d.deviceId}')">
+        <i class="fa-solid fa-link-slash"></i> Gỡ
+      </button>
+    </td>
+  </tr>`).join('') || '<tr><td colspan="6" class="small" style="text-align:center;padding:24px;">Chưa có thiết bị nào.</td></tr>';
 }
+
+/* === LOAD OVERVIEW === */
 async function loadOverview(){
   try{
     const data = await api('/api/admin/overview');
@@ -176,6 +571,8 @@ async function loadOverview(){
     showLogin();
   }
 }
+
+/* === SHOW LOGIN / APP === */
 function showLogin(){
   document.getElementById('adminLogin').classList.remove('hidden');
   document.getElementById('adminApp').classList.add('hidden');
@@ -184,6 +581,8 @@ function showApp(){
   document.getElementById('adminLogin').classList.add('hidden');
   document.getElementById('adminApp').classList.remove('hidden');
 }
+
+/* === LOGIN === */
 async function login(){
   try{
     setStatus('adminLoginStatus', 'Đang xác thực...', 'warn');
@@ -204,66 +603,190 @@ async function login(){
     loadOverview();
   }catch(error){
     setStatus('adminLoginStatus', error.message, 'err');
+    Swal.fire({
+      icon:'error',
+      title:'Đăng nhập thất bại',
+      text:error.message,
+      confirmButtonText:'Thử lại',
+    });
   }
 }
+
+/* === CREATE KEY === */
 async function createKey(){
+  const prefix=document.getElementById('prefix').value.trim()||'VIP';
+  const hours=Number(document.getElementById('hours').value||24);
+  const maxDevices=Number(document.getElementById('maxDevices').value||1);
+  const note=document.getElementById('note').value.trim();
+  const permanent=document.getElementById('permanent').value==='true';
+
+  const confirm=await Swal.fire({
+    title:'Xác nhận tạo key',
+    html:`<div style="line-height:1.85;font-size:.84rem;color:#aaa;text-align:left;">
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <div><span style="color:#888;">Prefix:</span> <strong style="color:var(--red2);">${prefix}</strong></div>
+        <div><span style="color:#888;">Hạn:</span> <strong style="color:#ffd600;">${permanent?'Vĩnh viễn':hours+' giờ'}</strong></div>
+        <div><span style="color:#888;">Thiết bị:</span> <strong style="color:#fff;">${maxDevices}</strong></div>
+        ${note?`<div><span style="color:#888;">Ghi chú:</span> <strong style="color:#fff;">${note}</strong></div>`:''}
+      </div>
+    </div>`,
+    icon:'question',
+    showCancelButton:true,
+    confirmButtonText:'<i class="fa-solid fa-plus"></i> Tạo key',
+    cancelButtonText:'Hủy',
+  });
+  if(!confirm.isConfirmed) return;
+
+  Swal.fire({title:'Đang tạo key...',allowOutsideClick:false,allowEscapeKey:false,didOpen:()=>Swal.showLoading()});
   try{
     setStatus('createKeyStatus', 'Đang tạo key...', 'warn');
     const data = await api('/api/admin/create-key', {
       method:'POST',
-      body: JSON.stringify({
-        prefix: document.getElementById('prefix').value.trim() || 'VIP',
-        hours: Number(document.getElementById('hours').value || 24),
-        maxDevices: Number(document.getElementById('maxDevices').value || 1),
-        note: document.getElementById('note').value.trim(),
-        permanent: document.getElementById('permanent').value === 'true'
-      })
+      body: JSON.stringify({ prefix, hours, maxDevices, note, permanent })
     });
     setStatus('createKeyStatus', `Đã tạo key: ${data.key}`, 'ok');
     loadOverview();
+    Swal.fire({
+      icon:'success',
+      title:'Tạo key thành công!',
+      html:`<div style="text-align:center;line-height:1.9;">
+        <div style="font-family:'Orbitron',sans-serif;font-size:1rem;color:#ffd600;letter-spacing:.06em;background:rgba(255,214,0,.08);padding:10px 16px;border-radius:12px;display:inline-block;margin:8px 0;">${data.key}</div>
+        <div style="font-size:.82rem;color:#aaa;margin-top:6px;">Key đã được tạo và sẵn sàng sử dụng.</div>
+      </div>`,
+      confirmButtonText:'<i class="fa-solid fa-copy"></i> Copy key',
+      showCancelButton:true,cancelButtonText:'Đóng',
+    }).then(r=>{if(r.isConfirmed) navigator.clipboard.writeText(data.key);});
   }catch(error){
     setStatus('createKeyStatus', error.message, 'err');
+    Swal.fire({icon:'error',title:'Tạo key thất bại',text:error.message,confirmButtonText:'Đóng'});
   }
 }
+
+/* === SEND NOTICE === */
 async function sendNotice(){
+  const title=document.getElementById('notifyTitle').value.trim();
+  const message=document.getElementById('notifyMessage').value.trim();
+  const type=document.getElementById('notifyType').value;
+  if(!title||!message){
+    Swal.fire({icon:'warning',title:'Thiếu thông tin',text:'Vui lòng nhập đầy đủ tiêu đề và nội dung.',confirmButtonText:'OK'});
+    return;
+  }
+  const confirm=await Swal.fire({
+    title:'Xác nhận gửi thông báo',
+    html:`<div style="line-height:1.8;font-size:.84rem;color:#aaa;text-align:left;">
+      <div><span style="color:#888;">Tiêu đề:</span> <strong style="color:#fff;">${title}</strong></div>
+      <div><span style="color:#888;">Loại:</span> <strong style="color:#ffd600;">${type}</strong></div>
+      <div><span style="color:#888;">Nội dung:</span> ${message}</div>
+    </div>`,
+    icon:'question',
+    showCancelButton:true,
+    confirmButtonText:'<i class="fa-solid fa-paper-plane"></i> Gửi',
+    cancelButtonText:'Hủy',
+  });
+  if(!confirm.isConfirmed) return;
+
+  Swal.fire({title:'Đang gửi thông báo...',allowOutsideClick:false,allowEscapeKey:false,didOpen:()=>Swal.showLoading()});
   try{
     setStatus('notifyStatus', 'Đang gửi thông báo...', 'warn');
     await api('/api/admin/notify', {
       method:'POST',
-      body: JSON.stringify({
-        title: document.getElementById('notifyTitle').value.trim(),
-        message: document.getElementById('notifyMessage').value.trim(),
-        type: document.getElementById('notifyType').value
-      })
+      body: JSON.stringify({ title, message, type })
     });
     setStatus('notifyStatus', 'Đã gửi thông báo.', 'ok');
     loadOverview();
+    Swal.fire({
+      icon:'success',title:'Gửi thành công!',
+      text:'Thông báo đã được gửi tới tất cả người dùng.',
+      timer:2500,showConfirmButton:false,
+    });
   }catch(error){
     setStatus('notifyStatus', error.message, 'err');
+    Swal.fire({icon:'error',title:'Gửi thất bại',text:error.message,confirmButtonText:'Đóng'});
   }
 }
+
+/* === TOGGLE KEY === */
 async function toggleKey(key, active){
+  const action=active ? 'mở khóa':'khóa';
+  const confirm=await Swal.fire({
+    title:`Xác nhận ${action} key`,
+    html:`<div style="font-family:'Orbitron',sans-serif;font-size:.85rem;color:#ff9999;letter-spacing:.04em;background:rgba(255,26,26,.06);padding:10px 16px;border-radius:12px;margin:10px 0;">${key}</div>`,
+    icon:'warning',
+    showCancelButton:true,
+    confirmButtonText:`<i class="fa-solid ${active?'fa-lock-open':'fa-lock'}"></i> ${active?'Mở khóa':'Khóa'}`,
+    cancelButtonText:'Hủy',
+  });
+  if(!confirm.isConfirmed) return;
   try{
     await api('/api/admin/toggle-key', { method:'POST', body: JSON.stringify({ key, active }) });
     loadOverview();
-  }catch(error){ alert(error.message); }
+    Swal.fire({
+      icon:'success',title:`${active?'Mở khóa':'Khóa'} thành công!`,
+      text:`Key đã được ${action} thành công.`,
+      timer:2000,showConfirmButton:false,toast:true,position:'top-end',
+    });
+  }catch(error){
+    Swal.fire({icon:'error',title:'Thao tác thất bại',text:error.message,confirmButtonText:'Đóng'});
+  }
 }
+
+/* === UNBIND DEVICE === */
 async function unbindDevice(key, deviceId){
+  const confirm=await Swal.fire({
+    title:'Xác nhận gỡ thiết bị',
+    html:`<div style="line-height:1.8;font-size:.83rem;color:#aaa;">
+      <div style="margin:6px 0;"><span style="color:#888;">Key:</span> <span style="font-family:'Orbitron',sans-serif;color:#ff9999;font-size:.78rem;">${key}</span></div>
+      <div><span style="color:#888;">Device:</span> <span style="font-family:'Orbitron',sans-serif;color:#aaa;font-size:.72rem;">${deviceId}</span></div>
+    </div>`,
+    icon:'warning',
+    showCancelButton:true,
+    confirmButtonText:'<i class="fa-solid fa-link-slash"></i> Gỡ thiết bị',
+    cancelButtonText:'Hủy',
+  });
+  if(!confirm.isConfirmed) return;
   try{
     await api('/api/admin/unbind-device', { method:'POST', body: JSON.stringify({ key, deviceId }) });
     loadOverview();
-  }catch(error){ alert(error.message); }
+    Swal.fire({
+      icon:'success',title:'Gỡ thiết bị thành công!',
+      text:'Thiết bị đã được gỡ khỏi key.',
+      timer:2000,showConfirmButton:false,toast:true,position:'top-end',
+    });
+  }catch(error){
+    Swal.fire({icon:'error',title:'Thao tác thất bại',text:error.message,confirmButtonText:'Đóng'});
+  }
 }
+
+/* === LOGOUT === */
 function logout(){
-  adminSession='';
-  localStorage.removeItem('secureapp_admin_session');
-  showLogin();
+  Swal.fire({
+    title:'Xác nhận đăng xuất',
+    text:'Phiên admin sẽ bị xóa khỏi thiết bị này.',
+    icon:'question',
+    showCancelButton:true,
+    confirmButtonText:'<i class="fa-solid fa-right-from-bracket"></i> Đăng xuất',
+    cancelButtonText:'Hủy',
+  }).then(r=>{
+    if(r.isConfirmed){
+      adminSession='';
+      localStorage.removeItem('secureapp_admin_session');
+      showLogin();
+    }
+  });
 }
+
+/* === EVENT LISTENERS — KEPT EXACTLY === */
 document.getElementById('adminLoginBtn').onclick = login;
 document.getElementById('createKeyBtn').onclick = createKey;
 document.getElementById('notifyBtn').onclick = sendNotice;
 document.getElementById('refreshBtn').onclick = loadOverview;
 document.getElementById('adminLogoutBtn').onclick = logout;
+
+/* === ENTER KEY LOGIN === */
+document.getElementById('adminPass').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+document.getElementById('adminToken').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+
+/* === AUTO RESTORE SESSION === */
 if(adminSession){ showApp(); loadOverview(); }
 </script>
 </body>
